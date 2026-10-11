@@ -84,10 +84,18 @@
     startButton.addEventListener("click", async () => {
       startButton.disabled = true;
       startButton.textContent = "Starting camera...";
-      try {
-        await scene.systems["mindar-image-system"].start();
-        startButton.style.display = "none";
-        message.textContent = "Point your camera at the poster.";
+     // Unlock muted video playback during the user's tap
+try {
+  await video.play();
+  video.pause();
+  video.currentTime = 0;
+} catch (e) {
+  console.log("Video playback will be retried when the poster is found.", e);
+}
+
+await scene.systems["mindar-image-system"].start();
+startButton.style.display = "none";
+message.textContent = "Point the camera at the poster.";
       } catch (error) {
         console.error(error);
         message.textContent =
